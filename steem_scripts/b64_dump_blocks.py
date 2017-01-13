@@ -18,6 +18,7 @@ import tornado.gen
 async def main(argv, io_loop=None):
     parser = argparse.ArgumentParser(description="Create bootstrap files for Steem")
     parser.add_argument("-s", "--server", dest="server", metavar="WEBSOCKET_URL", help="Specify API server")
+    parser.add_argument("-x", "--exit", dest="exit", action="store_true", help="Exit when fully caught up to server")
 
     args = parser.parse_args(argv[1:])
 
@@ -26,11 +27,11 @@ async def main(argv, io_loop=None):
     await node.wait_for_connection()
 
     try:
-        await print_blocks(node)
+        await print_blocks(node, args.exit)
     except BrokenPipeError:
         pass
 
-async def print_blocks(node):
+async def print_blocks(node, exit_on_finish):
     db_api = node.get_api("database_api")
     raw_block_api = node.get_api("raw_block_api")
 
@@ -49,6 +50,8 @@ async def print_blocks(node):
         if printed_this_time > 0:
             sys.stdout.flush()
         else:
+            if exit_on_finish:
+                break
             await tornado.gen.sleep(3)
 
 def sys_main():
