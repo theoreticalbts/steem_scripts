@@ -9,6 +9,7 @@ import json
 import shutil
 import sys
 import tempfile
+import time
 
 from steem_watch import steem_api
 
@@ -27,11 +28,11 @@ async def main(argv, io_loop=None):
     await node.wait_for_connection()
 
     try:
-        await print_blocks(node, args.exit)
+        await print_blocks(node, exit_on_finish=args.exit)
     except BrokenPipeError:
         pass
 
-async def print_blocks(node, exit_on_finish):
+async def print_blocks(node, exit_on_finish=False):
     db_api = node.get_api("database_api")
     raw_block_api = node.get_api("raw_block_api")
 
@@ -51,7 +52,11 @@ async def print_blocks(node, exit_on_finish):
             sys.stdout.flush()
         else:
             if exit_on_finish:
-                break
+                blockchain_now = datetime.datetime.strptime(dgpo["head_block_time"], "%Y-%m-%dT%H:%M:%S")
+                realtime_threshold = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+                is_realtime = (blockchain_now >= realtime_threshold)
+                if is_realtime:
+                    break
             await tornado.gen.sleep(3)
 
 def sys_main():
