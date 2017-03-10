@@ -70,7 +70,7 @@ async def main(argv, io_loop=None):
             binum = (timestamp - epoch) // print_interval_td
             if binum != last_inum:
                 istart = ( epoch + binum * print_interval_td ).strftime("%Y-%m-%dT%H:%M:%S")
-                print( istart, total_size, hasher.hexdigest() )
+                print( istart, next_block_num-1, total_size, hasher.hexdigest() )
                 sys.stdout.flush()
                 last_inum = binum
             offset = total_size
