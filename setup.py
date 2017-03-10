@@ -10,6 +10,7 @@ setup(
         "console_scripts" :
         [
             "b64_dump_blocks = steem_scripts.b64_dump_blocks:sys_main",
+            "head_blocklog = steem_scripts.head_blocklog:sys_main",
         ]
     },
     install_requires=[

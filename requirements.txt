@@ -1,0 +1,3 @@
+
+https://github.com/theoreticalbts/steemwatch/archive/master.zip#egg=steemwatch-v0.0.1.dev1
+tornado
