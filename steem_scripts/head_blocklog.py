@@ -30,12 +30,12 @@ async def main(argv, io_loop=None):
     parser = argparse.ArgumentParser(description="Print size/sha256sum of block log")
     parser.add_argument("-s", "--server", dest="server", metavar="WEBSOCKET_URL", help="Specify API server")
     parser.add_argument("-i", "--interval", dest="interval", metavar="SECONDS", default="1d", help="How long between saves (suffixes supported: s,m,h,d)")
-    parser.add_argument("-p", "--poll", dest="poll", metavar="SECONDS", default="0", help="Persist, polling for new blocks (0/omitted quits without polling)")
+    parser.add_argument("-p", "--poll", dest="poll_interval", metavar="SECONDS", default="0", help="Persist, polling for new blocks (0/omitted quits without polling)")
 
     args = parser.parse_args(argv[1:])
     print_interval = parse_time_interval(args.interval)
     print_interval_td = datetime.timedelta(seconds=print_interval)
-    poll_interval = parse_time_interval(args.interval)
+    poll_interval = parse_time_interval(args.poll_interval)
     epoch = datetime.datetime(1970, 1, 1)
 
     node = steem_api.ApiNode(io_loop=io_loop, websocket_url=args.server)
